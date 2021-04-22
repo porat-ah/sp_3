@@ -145,15 +145,7 @@ namespace ariel{
 
 //private
     NumberWithUnits NumberWithUnits::convert(const NumberWithUnits& other)const{
-        Unit * unit = NULL ;
-        try{
-         unit = &(units.at(u_type));
-        }
-        catch(const exception& e)
-        {
-            
-        }
-
+        Unit * unit  = &(units.at(u_type));
         if(unit->search(other.u_type)){
             return NumberWithUnits{unit->convert_num(other.u_type) * (other.num),u_type};
         }
@@ -164,11 +156,10 @@ namespace ariel{
         throw invalid_argument{message}; 
     }
 
-
 // arithmatic operators
 
 // + 
-    NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits& other)
+    NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits& other)const
     {
         NumberWithUnits n = convert(other);
         NumberWithUnits out (n.num + num,u_type);
@@ -190,10 +181,10 @@ namespace ariel{
 
 
 // - 
-    NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits& other)
+    NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits& other)const
     {
         NumberWithUnits n = convert(other);
-        NumberWithUnits out (-n.num + num,u_type);
+        NumberWithUnits out (num - n.num,u_type);
         return out;
     }
 
@@ -214,52 +205,53 @@ namespace ariel{
 // boolean operators
 
 // >
-    bool NumberWithUnits::operator>(const NumberWithUnits& other)
+    bool NumberWithUnits::operator>(const NumberWithUnits& other)const
     {
-        {
+        
         NumberWithUnits n = convert(other);
         bool b = num > n.num;
         return b;
-    }
+    
     }
 
-    bool NumberWithUnits::operator>=(const NumberWithUnits& other)
+    bool NumberWithUnits::operator>=(const NumberWithUnits& other)const
     {
-      {
+      
         NumberWithUnits n = convert(other);
         bool b = num >= n.num;
         return b;
-    }
+    
     }
 
 // <
-    bool NumberWithUnits::operator<(const NumberWithUnits& other)
+    bool NumberWithUnits::operator<(const NumberWithUnits& other)const
     {
-       {
+       
         NumberWithUnits n = convert(other);
-        bool b = num < n.num;
+        bool b = (n.num - num) > EPS ;
         return b;
-    }
+    
     }
 
-    bool NumberWithUnits::operator<=(const NumberWithUnits& other)
+    bool NumberWithUnits::operator<=(const NumberWithUnits& other)const
     {
-       {
+       
         NumberWithUnits n = convert(other);
         bool b = num <= n.num;
         return b;
-    }
+   
     }
 
 // = / !
-    bool NumberWithUnits::operator==(const NumberWithUnits& other)
+    bool NumberWithUnits::operator==(const NumberWithUnits& other)const
     {
+        
         NumberWithUnits n = convert(other);
-        bool b = num == n.num;
+        bool b = abs(num - n.num) < EPS;
         return b;
     }
     
-    bool NumberWithUnits::operator!=(const NumberWithUnits& other)
+    bool NumberWithUnits::operator!=(const NumberWithUnits& other)const
     {
         NumberWithUnits n = convert(other);
         bool b = num != n.num;
@@ -313,14 +305,20 @@ namespace ariel{
 
 
 // io operators
-    istream& operator >> (istringstream& os ,  NumberWithUnits& n)
+    istream& operator >> (istream& os ,  NumberWithUnits& n)
     {
         string s;
-        string temp;
+        char t = os.get();
         while (os.good())
         {
-            os>> temp;
-            s += temp;
+            if( t != ' ' ){
+                s += t;
+            }
+            if (t == ']')
+            {
+                break;
+            }
+            t = os.get();
         }
         size_t i = 0;
         char c =s.at(0);
