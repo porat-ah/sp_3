@@ -21,7 +21,6 @@ namespace ariel
             public:
                 double change;
                 Unit * to; 
-                //Edge();
                 Edge(double c , Unit* up );
                 ~Edge();
             };
@@ -43,10 +42,10 @@ namespace ariel
          };
 
         NumberWithUnits convert(const NumberWithUnits& other)const;
-        //static string remove_space(const string& s);
+
         static double round5(const double& d);
 
-        static unordered_map<string,Unit> units ;
+        static unordered_map<string,Unit> units;;
         static constexpr double EPS = 0.001;
 
     public :
@@ -58,7 +57,6 @@ namespace ariel
         static void read_units(ifstream& os);
 
         NumberWithUnits operator+(const NumberWithUnits& other)const;
-        //NumberWithUnits operator+(const NumberWithUnits& other);
 
         NumberWithUnits operator+()const;
 

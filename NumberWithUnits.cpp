@@ -7,7 +7,6 @@ namespace ariel{
         //Edge
 
 // constaractors
-        //NumberWithUnits::Edge::Edge(){};
 
         NumberWithUnits::Edge::Edge(double c , Unit* up ){
         change = c;
@@ -96,7 +95,8 @@ namespace ariel{
     // NumberWithUnits
 
 // graph initiator
-    unordered_map<string,NumberWithUnits::Unit> NumberWithUnits::units;
+
+        unordered_map<string,NumberWithUnits::Unit> NumberWithUnits::units;
 // constaractors
     NumberWithUnits::NumberWithUnits(double number , string type){
         if(units.find(type) == units.end()){
@@ -105,6 +105,7 @@ namespace ariel{
         num = number; 
         u_type = std::move(type);    
     }
+
 
 // static 
     void NumberWithUnits::read_units(ifstream& os){
@@ -209,7 +210,7 @@ namespace ariel{
     {
         
         NumberWithUnits n = convert(other);
-        bool b = num > n.num;
+        bool b = (num - n.num) > EPS;
         return b;
     
     }
@@ -218,7 +219,7 @@ namespace ariel{
     {
       
         NumberWithUnits n = convert(other);
-        bool b = num >= n.num;
+        bool b = !((n.num  - num) > EPS) ;
         return b;
     
     }
@@ -237,7 +238,7 @@ namespace ariel{
     {
        
         NumberWithUnits n = convert(other);
-        bool b = num <= n.num;
+        bool b = !((num  - n.num) > EPS);
         return b;
    
     }
@@ -254,7 +255,7 @@ namespace ariel{
     bool NumberWithUnits::operator!=(const NumberWithUnits& other)const
     {
         NumberWithUnits n = convert(other);
-        bool b = num != n.num;
+        bool b = abs(num - n.num) > EPS;
         return b;
     }
 
